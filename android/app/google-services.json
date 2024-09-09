@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "338855993523",
+    "project_id": "meowdoro-e203f",
+    "storage_bucket": "meowdoro-e203f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338855993523:android:ae8bd7d51f3dffbbdb90c6",
+        "android_client_info": {
+          "package_name": "com.example.meowdoro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1bxMdzr_RWQgK5DHkvCR5P5DM7nr_zmk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
