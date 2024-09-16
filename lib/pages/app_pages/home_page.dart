@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:meowdoro/components/money.dart';
 import 'dart:async';
 
 import '../../components/button.dart';
@@ -19,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   double _remainingTime = 25 * 60;
   int _userMoney = 404;
   int newMoney = 0;
+  int _userTime = 0;
+  int newTime = 0;
 
   @override
   void initState() {
@@ -108,6 +111,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           if (_remainingTime > 0) {
             _remainingTime--;
+            newTime++;
             if (_remainingTime % 2 == 0){
               newMoney++;
             }
@@ -130,14 +134,16 @@ class _HomePageState extends State<HomePage> {
 
       if (currentUser != null) {
         String uid = currentUser.uid;
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("User Money").doc(uid).get();
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("User Details").doc(uid).get();
 
         if (userDoc.exists) {
           int userMoney = userDoc['UserMoney'];
+          int userTime = userDoc['UserTime'];
 
 
             setState(() {
               _userMoney = userMoney;
+              _userTime = userTime;
             });
 
 // Assuming _userMoney is a state variable
@@ -158,16 +164,19 @@ class _HomePageState extends State<HomePage> {
       if (currentUser != null) {
         String uid = currentUser.uid;
 
-        await FirebaseFirestore.instance.collection("User Money").doc(uid).set({
+        await FirebaseFirestore.instance.collection("User Details").doc(uid).set({
           'UserMoney': _userMoney + newMoney,
+          'UserTime': _userTime + newTime,
         });
 
         DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("User Money").doc(uid).get();
 
         if (userDoc.exists) {
           int userMoney = userDoc['UserMoney'];
+          int userTime = userDoc['UserTime'];
 
-          _userMoney = userMoney;  // Assuming _userMoney is a state variable
+          _userMoney = userMoney;
+          _userTime = userTime;
 
         } else {
           print("User data not found.");
@@ -185,48 +194,33 @@ class _HomePageState extends State<HomePage> {
       body: Center(
           child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Add padding around the text
-            decoration: BoxDecoration(
-              color: Colors.orange[200], // Background color
-              borderRadius: BorderRadius.circular(12), // Rounded corners
-            ),
-            child: Text(
-              "Your Money: $_userMoney",
-              style: TextStyle(
-                fontSize: 20, // Change the font size
-                fontWeight: FontWeight.w900, // Make the text bold
-                color: Colors.white, // Change the text color
-                letterSpacing: 2.0, // Increase spacing between letters
-              ),
-            ),
-          ),
+          MoneyDisplay(userMoney: _userMoney),
 
           const SizedBox(height: 20),
           if (selected && !started)
           Text("Selected: " + formatDuration(_remainingTime.toInt()).toString(),
               style: TextStyle(
-                fontSize: 20, // Change the font size
-                fontWeight: FontWeight.bold, // Make the text bold
-                color: Colors.orangeAccent, // Change the text color
-                letterSpacing: 2.0, // Increase spacing between letters
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.orangeAccent,
+                letterSpacing: 2.0,
               )
           )
           else if (!selected) Text("Select a time!",
               style: TextStyle(
-                fontSize: 20, // Change the font size
-                fontWeight: FontWeight.bold, // Make the text bold
-                color: Colors.orangeAccent, // Change the text color
-                letterSpacing: 2.0, // Increase spacing between letters
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.orangeAccent,
+                letterSpacing: 2.0,
               )
           ),
           if (started)
             Text(formatDuration(_remainingTime.toInt()),
                 style: TextStyle(
-                  fontSize: 40, // Change the font size
-                  fontWeight: FontWeight.bold, // Make the text bold
-                  color: Colors.orangeAccent, // Change the text color
-                  letterSpacing: 2.0, // Increase spacing between letters
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orangeAccent,
+                  letterSpacing: 2.0,
                 )
             ),
           const SizedBox(height: 10),
@@ -241,22 +235,22 @@ class _HomePageState extends State<HomePage> {
               }
             },
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(100, 100), // Set the size to match the image size
-              shape: CircleBorder(), // Make the button circular
-              padding: EdgeInsets.all(0), // No padding
-              backgroundColor: Colors.transparent, // Transparent background
-              elevation: 0, // No elevation
+              minimumSize: Size(100, 100),
+              shape: CircleBorder(),
+              padding: EdgeInsets.all(0),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
             ),
             child: Container(
-              width: 300, // Set width of the container
-              height: 300, // Set height of the container
+              width: 300,
+              height: 300,
               decoration: BoxDecoration(
-                shape: BoxShape.circle, // Ensure the container is circular
+                shape: BoxShape.circle,
               ),
               child: FittedBox(
-                fit: BoxFit.cover, // Ensure the image covers the container
+                fit: BoxFit.cover,
                 child: Image.asset(
-                  mikaipath, // Path to your image
+                  mikaipath,
                 ),
               ),
             ),

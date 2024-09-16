@@ -9,7 +9,7 @@ class ShopPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("you're logged in as " + user.email!),),
+      body: Center(child: Text("TODO"),),
     );
   }
 }

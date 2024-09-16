@@ -35,8 +35,9 @@ class _RegisterPageState extends State<RegisterPage> {
         String uid = userCredential.user!.uid;
 
         // Add user data to Firestore
-        await FirebaseFirestore.instance.collection("User Money").doc(uid).set({
+        await FirebaseFirestore.instance.collection("User Details").doc(uid).set({
           'UserMoney': 0,
+          'UserTime': 0,
         });
 
       } else {
