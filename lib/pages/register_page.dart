@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meowdoro/components/button.dart';
@@ -35,6 +36,10 @@ class _RegisterPageState extends State<RegisterPage> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text);
+        FirebaseFirestore.instance.collection("User Money").add({
+          'UserEmail': emailController.text,
+          'UserMoney': 0,
+        });
       } else {
         Navigator.pop(context);
         passMismatch();

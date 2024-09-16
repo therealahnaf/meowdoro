@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meowdoro/pages/login_register_page.dart';
-import 'home_page.dart';
+import 'main_home_page.dart';
 
 class AuthPage extends StatelessWidget{
   const AuthPage({super.key});
@@ -13,7 +13,7 @@ class AuthPage extends StatelessWidget{
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return HomePage();
+              return MainHomePage(currentIndex: 0,);
             } else {
               return LoginRegisterPage();
             }
