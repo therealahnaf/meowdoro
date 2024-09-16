@@ -73,8 +73,7 @@ class _MainHomePageState extends State<MainHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            MainHomePage.navigation[widget.currentIndex].label),
+
       ),
       body: page[widget.currentIndex],
       bottomNavigationBar: NavigationBarTheme(

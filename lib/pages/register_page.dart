@@ -24,29 +24,28 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // sign user in method
   void signUserUp() async {
-    showDialog(
-        context: context,
-        builder: (context){
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
     try {
       if (confirmpasswordController.text == passwordController.text) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text);
-        FirebaseFirestore.instance.collection("User Money").add({
-          'UserEmail': emailController.text,
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        // Get the UID of the created user
+        String uid = userCredential.user!.uid;
+
+        // Add user data to Firestore
+        await FirebaseFirestore.instance.collection("User Money").doc(uid).set({
           'UserMoney': 0,
         });
+
       } else {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         passMismatch();
       }
-      Navigator.pop(context);
+      // Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
+      // Navigator.pop(context);
       if (e.code == 'user-not-found') {
         wrongEmail();
       } else if (e.code == 'wrong-password') {

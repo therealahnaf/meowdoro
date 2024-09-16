@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+import '../../components/button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,10 +13,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final userCredential = FirebaseAuth.instance.currentUser!;
 
-  int timeSelected = 25;
-  int _remainingTime = 25 * 60;
+  double timeSelected = 25;
+  double _remainingTime = 25 * 60;
+  int _userMoney = 404;
+  int newMoney = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch user money when the widget is initialized
+    getUserMoney();
+
+  }
 
   bool started = false;
   bool selected = false;
@@ -29,6 +42,26 @@ class _HomePageState extends State<HomePage> {
       return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     } else {
       return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    }
+  }
+
+  TimeOfDay _selectedTime = TimeOfDay(hour: 0, minute: 0);  // Initial time set to current time
+
+
+  // Function to open the time picker dialog and select a time
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,  // The time initially displayed on the picker
+    );
+
+    if (pickedTime != null && pickedTime != _selectedTime) {
+      setState(() {
+        _selectedTime = pickedTime;
+        timeSelected = (_selectedTime.hour * 3600) + (_selectedTime.minute * 60);
+        selected = true;
+        _remainingTime = timeSelected;// Update the selected time
+      });
     }
   }
 
@@ -70,14 +103,20 @@ class _HomePageState extends State<HomePage> {
   void startTimer() {
     if (selected){
       started = true;
-      circleButton_text = "STOP";
       _timer?.cancel(); // Cancel any previous timer before starting a new one
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         setState(() {
           if (_remainingTime > 0) {
             _remainingTime--;
+            if (_remainingTime % 2 == 0){
+              newMoney++;
+            }
           } else {
-            _timer?.cancel(); // Stop the timer when it reaches zero
+            _timer?.cancel();
+            setUserMoney();
+            getUserMoney();
+            started = false;
+            selected = false;
           }
         });
       });
@@ -85,15 +124,87 @@ class _HomePageState extends State<HomePage> {
 
   }
 
+  Future<void> getUserMoney() async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        String uid = currentUser.uid;
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("User Money").doc(uid).get();
+
+        if (userDoc.exists) {
+          int userMoney = userDoc['UserMoney'];
+
+
+            setState(() {
+              _userMoney = userMoney;
+            });
+
+// Assuming _userMoney is a state variable
+
+        } else {
+          print("User data not found.");
+        }
+      }
+    } catch (e) {
+      print("Error fetching user money: $e");
+    }
+  }
+
+  Future<void> setUserMoney() async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        String uid = currentUser.uid;
+
+        await FirebaseFirestore.instance.collection("User Money").doc(uid).set({
+          'UserMoney': _userMoney + newMoney,
+        });
+
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("User Money").doc(uid).get();
+
+        if (userDoc.exists) {
+          int userMoney = userDoc['UserMoney'];
+
+          _userMoney = userMoney;  // Assuming _userMoney is a state variable
+
+        } else {
+          print("User data not found.");
+        }
+      }
+    } catch (e) {
+      print("Error fetching user money: $e");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
           child: Column(
         children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Add padding around the text
+            decoration: BoxDecoration(
+              color: Colors.orange[200], // Background color
+              borderRadius: BorderRadius.circular(12), // Rounded corners
+            ),
+            child: Text(
+              "Your Money: $_userMoney",
+              style: TextStyle(
+                fontSize: 20, // Change the font size
+                fontWeight: FontWeight.w900, // Make the text bold
+                color: Colors.white, // Change the text color
+                letterSpacing: 2.0, // Increase spacing between letters
+              ),
+            ),
+          ),
+
           const SizedBox(height: 20),
           if (selected && !started)
-          Text("Selected: " + timeSelected.toString(),
+          Text("Selected: " + formatDuration(_remainingTime.toInt()).toString(),
               style: TextStyle(
                 fontSize: 20, // Change the font size
                 fontWeight: FontWeight.bold, // Make the text bold
@@ -110,7 +221,7 @@ class _HomePageState extends State<HomePage> {
               )
           ),
           if (started)
-            Text(formatDuration(_remainingTime),
+            Text(formatDuration(_remainingTime.toInt()),
                 style: TextStyle(
                   fontSize: 40, // Change the font size
                   fontWeight: FontWeight.bold, // Make the text bold
@@ -156,52 +267,31 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  setTimeTwentyFive();
-                },
-                child: Text(
-                  '25 m',
-                  style: TextStyle(
-                    fontSize: 20, // Change the font size
-                    fontWeight: FontWeight.bold, // Make the text bold
-                    color: Colors.orangeAccent, // Change the text color
-                    letterSpacing: 2.0, // Increase spacing between letters
-                  ),
-                ),
+              MyButton(
+                text: "25 m",
+                onTap: setTimeTwentyFive,
               ),
               const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  setTimeFifty();
-                },
-                child: Text(
-                  '50 m',
-                  style: TextStyle(
-                    fontSize: 20, // Change the font size
-                    fontWeight: FontWeight.bold, // Make the text bold
-                    color: Colors.orangeAccent, // Change the text color
-                    letterSpacing: 2.0, // Increase spacing between letters
-                  ),
-                ),
+              MyButton(
+                text: "50 m",
+                onTap: setTimeFifty,
               ),
               const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  setTimeTwo();
-                },
-                child: Text(
-                  '2 hrs',
-                  style: TextStyle(
-                    fontSize: 20, // Change the font size
-                    fontWeight: FontWeight.bold, // Make the text bold
-                    color: Colors.orangeAccent, // Change the text color
-                    letterSpacing: 2.0, // Increase spacing between letters
-                  ),
-                ),
+              MyButton(
+                text: "2 hrs",
+                onTap: setTimeTwo,
               ),
+
+
             ],
           ),
+          const SizedBox(height: 10),
+          if (!started)
+            MyButton(
+              text: "Set Custom Time",
+              onTap: () => _selectTime(context),
+            ),
+
         ],
       )),
     );
