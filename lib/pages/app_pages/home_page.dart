@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meowdoro/components/money.dart';
 import 'dart:async';
+import 'package:time_picker_spinner/time_picker_spinner.dart';
 
 import '../../components/button.dart';
 
@@ -21,7 +22,10 @@ class _HomePageState extends State<HomePage> {
   int _userMoney = 404;
   int newMoney = 0;
   int _userTime = 0;
+  int _userCoupons = 0;
   int newTime = 0;
+  bool custom = false;
+  var dateTime= DateTime.now();
 
   @override
   void initState() {
@@ -48,24 +52,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  TimeOfDay _selectedTime = TimeOfDay(hour: 0, minute: 0);  // Initial time set to current time
 
 
   // Function to open the time picker dialog and select a time
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,  // The time initially displayed on the picker
-    );
 
-    if (pickedTime != null && pickedTime != _selectedTime) {
-      setState(() {
-        _selectedTime = pickedTime;
-        timeSelected = (_selectedTime.hour * 3600) + (_selectedTime.minute * 60);
-        selected = true;
-        _remainingTime = timeSelected;// Update the selected time
-      });
-    }
+  void selectT(){
+    selected = true;
+    selectCustomTime();
+  }
+
+  void selectCustomTime() {
+    setState(() {
+      custom = !custom;
+      timeSelected = (dateTime.hour * 3600) + (dateTime.minute * 60) + dateTime.second.toDouble();
+      _remainingTime = timeSelected;// Update the selected time
+    });
+    print(dateTime);
   }
 
   void setTimeTwentyFive() {
@@ -139,11 +141,13 @@ class _HomePageState extends State<HomePage> {
         if (userDoc.exists) {
           int userMoney = userDoc['UserMoney'];
           int userTime = userDoc['UserTime'];
+          int userCoupons = userDoc['UserCoupons'];
 
 
             setState(() {
               _userMoney = userMoney;
               _userTime = userTime;
+              _userCoupons = userCoupons;
             });
 
 // Assuming _userMoney is a state variable
@@ -167,6 +171,7 @@ class _HomePageState extends State<HomePage> {
         await FirebaseFirestore.instance.collection("User Details").doc(uid).set({
           'UserMoney': _userMoney + newMoney,
           'UserTime': _userTime + newTime,
+          'UserCoupons': _userCoupons,
         });
 
         DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("User Money").doc(uid).get();
@@ -174,9 +179,11 @@ class _HomePageState extends State<HomePage> {
         if (userDoc.exists) {
           int userMoney = userDoc['UserMoney'];
           int userTime = userDoc['UserTime'];
+          int userCoupons = userDoc['UserCoupons'];
 
           _userMoney = userMoney;
           _userTime = userTime;
+          _userCoupons = userCoupons;
 
         } else {
           print("User data not found.");
@@ -280,11 +287,39 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           const SizedBox(height: 10),
-          if (!started)
+          if (!started && !custom)
             MyButton(
               text: "Set Custom Time",
-              onTap: () => _selectTime(context),
+              onTap: () => selectCustomTime(),
             ),
+          if (custom && !selected)
+            Column(
+              children: [
+                TimePickerSpinner(
+                  locale: const Locale('en', ''),
+                  time: dateTime,
+                  is24HourMode: true,
+                  isShowSeconds: true,
+                  itemHeight: 40,
+                  normalTextStyle: const TextStyle(
+                    fontSize: 24,
+                  ),
+                  highlightedTextStyle:
+                  const TextStyle(fontSize: 24, color: Colors.blue),
+                  isForce2Digits: true,
+                  onTimeChange: (time) {
+                    setState(() {
+                      dateTime = time;
+                    });
+                  },
+                ),
+                MyButton(
+                  text: "Set",
+                  onTap: () => selectT(),
+                ),
+              ],
+            )
+
 
         ],
       )),

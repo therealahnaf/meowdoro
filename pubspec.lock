@@ -293,6 +293,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2"
+  time_picker_spinner:
+    dependency: "direct main"
+    description:
+      name: time_picker_spinner
+      sha256: "53d824801d108890d22756501e7ade9db48b53dac1ec41580499dd4ebd128e3c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   typed_data:
     dependency: transitive
     description:
@@ -325,6 +333,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  widget_spinning_wheel:
+    dependency: "direct main"
+    description:
+      name: widget_spinning_wheel
+      sha256: db90397b4d187d5c242e72c38671a4fe1ebc3f418fa69554b242e07778b8a818
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
 sdks:
   dart: ">=3.5.1 <4.0.0"
   flutter: ">=3.22.0"

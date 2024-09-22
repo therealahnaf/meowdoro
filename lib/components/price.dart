@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-class MoneyDisplay extends StatelessWidget {
-  final int userMoney;
+class PriceDisplay extends StatelessWidget {
+  final int itemPrice;
 
-  // Constructor to accept userMoney as a parameter
-  const MoneyDisplay({Key? key, required this.userMoney}) : super(key: key);
+  // Constructor to accept itemPrice as a parameter
+  const PriceDisplay({Key? key, required this.itemPrice}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Add padding around the text
       decoration: BoxDecoration(
-        color: Colors.orange[200], // Background color
+        color: Colors.red[200], // Background color
         borderRadius: BorderRadius.circular(12), // Rounded corners
       ),
       child: Text(
-        "Your Money: $userMoney Ms",
+        "Price: $itemPrice",
         style: TextStyle(
           fontSize: 20, // Change the font size
           fontWeight: FontWeight.w900, // Make the text bold
