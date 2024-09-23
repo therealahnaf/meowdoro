@@ -201,7 +201,7 @@ class _ShopPageState extends State<ShopPage> {
               const SizedBox(height: 15),
               if (_userMoney >= 1000) Icon(Icons.arrow_downward_rounded, size: 80, color: Colors.orange[200]),
               if (_userMoney < 1000) Icon(Icons.lock_rounded, size: 80, color: Colors.orange[200],),
-              if (_userMoney > 1000)
+              if (_userMoney >= 1000)
                 WidgetSpinningWheel(
                   labels: ['1000 Ms', 'Cat Coupon', '3000 Ms'],
                   onSpinComplete: (String label) {
@@ -231,11 +231,11 @@ class _ShopPageState extends State<ShopPage> {
                   size: 200,
                 ),
               const SizedBox(height: 20),
-              if (_userMoney > 1000) Text("Tap on the wheel to spin!"),
+              if (_userMoney >= 1000) Text("Tap on the wheel to spin!"),
               if (_userMoney > 1000) const SizedBox(height: 20),
               PriceDisplay(itemPrice: 1000),
               const SizedBox(height: 20),
-              if (_userMoney <= 1000) Text("You don't have enough money for the spin!"),
+              if (_userMoney < 1000) Text("You don't have enough money for the spin!"),
               const SizedBox(height: 20),
               Divider(color: Colors.orange[200], thickness: 3, indent: 30, endIndent: 30,),
               const SizedBox(height: 20),
