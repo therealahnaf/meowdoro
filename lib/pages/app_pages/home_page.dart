@@ -202,8 +202,9 @@ class _HomePageState extends State<HomePage> {
           child: Column(
         children: [
           MoneyDisplay(userMoney: _userMoney),
-
           const SizedBox(height: 20),
+          Divider(color: Colors.orange[200], thickness: 3, indent: 30, endIndent: 30,),
+          const SizedBox(height: 10),
           if (selected && !started)
           Text("Selected: " + formatDuration(_remainingTime.toInt()).toString(),
               style: TextStyle(
@@ -231,6 +232,7 @@ class _HomePageState extends State<HomePage> {
                 )
             ),
           const SizedBox(height: 10),
+          Divider(color: Colors.orange[200], thickness: 3, indent: 30, endIndent: 30,),
           ElevatedButton(
             onPressed: () {
               if (started) {
@@ -249,8 +251,8 @@ class _HomePageState extends State<HomePage> {
               elevation: 0,
             ),
             child: Container(
-              width: 300,
-              height: 300,
+              width: 200,
+              height: 200,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
               ),
@@ -272,12 +274,12 @@ class _HomePageState extends State<HomePage> {
                 text: "25 m",
                 onTap: setTimeTwentyFive,
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 5),
               MyButton(
                 text: "50 m",
                 onTap: setTimeFifty,
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 5),
               MyButton(
                 text: "2 hrs",
                 onTap: setTimeTwo,
@@ -302,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                   isShowSeconds: true,
                   itemHeight: 40,
                   normalTextStyle: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 14,
                   ),
                   highlightedTextStyle:
                   const TextStyle(fontSize: 24, color: Colors.blue),

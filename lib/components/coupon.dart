@@ -15,7 +15,7 @@ class CouponDisplay extends StatelessWidget {
         borderRadius: BorderRadius.circular(12), // Rounded corners
       ),
       child: Text(
-        "Your Coupons: $userCoupons",
+        "$userCoupons Coupons",
         style: TextStyle(
           fontSize: 20, // Change the font size
           fontWeight: FontWeight.w900, // Make the text bold

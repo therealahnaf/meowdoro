@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore: ^5.4.1
   time_picker_spinner: any
   widget_spinning_wheel: ^0.0.5
+  vertical_card_pager: ^1.6.0
 
 dev_dependencies:
   flutter_test:

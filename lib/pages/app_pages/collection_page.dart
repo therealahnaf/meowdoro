@@ -53,7 +53,7 @@ class _CollectionPageState extends State<CollectionPage> {
       print("Returned null");
       return null;
     }
-     // Return null if there are no cat IDs
+    // Return null if there are no cat IDs
   }
 // Function to add cat to user
   // Function to add cat to user
@@ -168,7 +168,11 @@ class _CollectionPageState extends State<CollectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(flexibleSpace: CouponDisplay(userCoupons: _userCoupons,)),
+      appBar: AppBar(
+        flexibleSpace: Center(
+          child: CouponDisplay(userCoupons: _userCoupons),
+        ),
+      ),
       body:
       StreamBuilder<QuerySnapshot>(
         stream: getUserCatsStream(user.uid), // Listen to the user's cats
@@ -222,20 +226,40 @@ class _CollectionPageState extends State<CollectionPage> {
               },
             );
           } else {
-            return Center(child: Text("No cats found for this user."));
+            return Center(child: Text("You don't have any cats! Start your meowdoro to earn Ms and cat coupons!"));
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange[200],
         onPressed: () async {
           // Action to perform when button is pressed
-          setUserMoney();
-          var cat2add = await getRandomCatId();
-          print(cat2add);
-          addCatToUser(user.uid, cat2add!);
+          if (_userCoupons > 0){
+            setUserMoney();
+            var cat2add = await getRandomCatId();
+            print(cat2add);
+            addCatToUser(user.uid, cat2add!);
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('No coupons left!'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Ok'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         },
         tooltip: 'Redeem',
-        child: Text("Redeem"), // Icon displayed on the button
+        child: Icon(Icons.pets_outlined), // Icon displayed on the button
       ),
     );
   }

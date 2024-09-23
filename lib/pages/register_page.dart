@@ -42,11 +42,8 @@ class _RegisterPageState extends State<RegisterPage> {
         });
         await FirebaseFirestore.instance.collection("User Details")
             .doc(uid)
-            .collection("UserCats")
-            .doc("placeholder_cat") // Placeholder document
-            .set({
-          'placeholder': true // This document can be replaced or removed later
-        });
+            .collection("UserCats");
+
 
 
       } else {

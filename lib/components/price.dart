@@ -15,7 +15,7 @@ class PriceDisplay extends StatelessWidget {
         borderRadius: BorderRadius.circular(12), // Rounded corners
       ),
       child: Text(
-        "Price: $itemPrice",
+        "$itemPrice Ms",
         style: TextStyle(
           fontSize: 20, // Change the font size
           fontWeight: FontWeight.w900, // Make the text bold
