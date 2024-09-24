@@ -9,29 +9,54 @@ class CatDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 50),
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Add padding around the text
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+      margin: EdgeInsets.symmetric(horizontal: 200, vertical: 8), // Add padding around the text
       decoration: BoxDecoration(
-        color: Colors.transparent, // Background color
-        borderRadius: BorderRadius.circular(12), // Rounded corners
+        color: Colors.orange[100], // Background color
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.brown, width: 5),// Rounded corners
       ),
       child: Column(
         children: [
           Image.asset(
             cats["image"]!, // Cat image
             height: 400, // Adjust height as needed
-            fit: BoxFit.cover, // Ensure image fits well
+            fit: BoxFit.fill, // Ensure image fits well
           ),
           SizedBox(height: 8), // Space between image and text
-          Text(
-            cats['Name'] ?? 'Unknown Cat', // Cat name
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Add padding around the text
+          decoration: BoxDecoration(
+            color: Colors.orange[300], // Background color
+            borderRadius: BorderRadius.circular(12), // Rounded corners
           ),
+          child: Text(
+            cats["Name"],
+            style: TextStyle(
+              fontSize: 20, // Change the font size
+              fontWeight: FontWeight.w900, // Make the text bold
+              color: Colors.white, // Change the text color
+              letterSpacing: 2.0, // Increase spacing between letters
+            ),
+          ),
+        ),
           SizedBox(height: 4), // Space between name and ability
-          Text(
-            cats['Ability'] ?? 'No Ability Listed', // Cat ability
-            style: TextStyle(fontSize: 16),
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Add padding around the text
+        decoration: BoxDecoration(
+          color: Colors.orange[200], // Background color
+          borderRadius: BorderRadius.circular(12), // Rounded corners
+        ),
+        child: Text(
+          "Ability: "+cats["Ability"],
+          style: TextStyle(
+            fontSize: 16, // Change the font size
+            fontWeight: FontWeight.w900, // Make the text bold
+            color: Colors.white, // Change the text color
+            letterSpacing: 1.0, // Increase spacing between letters
           ),
+        ),
+      )
         ],
       ),
     );
