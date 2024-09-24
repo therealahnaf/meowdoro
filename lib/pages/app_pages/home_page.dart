@@ -302,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                   time: dateTime,
                   is24HourMode: true,
                   isShowSeconds: true,
-                  itemHeight: 40,
+                  itemHeight: 30,
                   normalTextStyle: const TextStyle(
                     fontSize: 14,
                   ),
