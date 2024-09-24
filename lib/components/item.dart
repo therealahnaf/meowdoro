@@ -16,7 +16,7 @@ class _ItemDisplayState extends State<ItemDisplay> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Add padding around the text
+      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 8), // Add padding around the text
       decoration: BoxDecoration(
         color: Colors.orange[200], // Background color
         borderRadius: BorderRadius.circular(12), // Rounded corners
@@ -28,8 +28,8 @@ class _ItemDisplayState extends State<ItemDisplay> {
           Expanded(
             child: ListTile(
               leading: Image.asset(
-                "lib/images/cathome.png",
-                height: 200,
+                widget.cats["image"],
+                height: 400,
               ), // Cat image
               title: Text(widget.cats['Ability']), // Cat ability
                // Additional info

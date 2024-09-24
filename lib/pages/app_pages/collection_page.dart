@@ -239,6 +239,27 @@ class _CollectionPageState extends State<CollectionPage> {
             var cat2add = await getRandomCatId();
             print(cat2add);
             addCatToUser(user.uid, cat2add!);
+            DocumentSnapshot catDoc = await getCatData(cat2add);
+            var catData = catDoc.data() as Map<String, dynamic>;
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('You won ' + catData["Name"] + "!"),
+                  content: SingleChildScrollView(
+                    child: Image.asset(catData["image"]),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Accept'),
+                    ),
+                  ],
+                );
+              },
+            );
           } else {
             showDialog(
               context: context,

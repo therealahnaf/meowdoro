@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
             _remainingTime--;
             newTime++;
             if (_remainingTime % 2 == 0){
-              newMoney++;
+              newMoney+=50;
             }
           } else {
             _timer?.cancel();
@@ -206,13 +206,16 @@ class _HomePageState extends State<HomePage> {
           Divider(color: Colors.orange[200], thickness: 3, indent: 30, endIndent: 30,),
           const SizedBox(height: 10),
           if (selected && !started)
-          Text("Selected: " + formatDuration(_remainingTime.toInt()).toString(),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.orangeAccent,
-                letterSpacing: 2.0,
-              )
+          Center(
+            child: Text("Selected: " + formatDuration(_remainingTime.toInt()).toString() + " | Start to earn " + ((_remainingTime.toInt()/2)*50).toString() + " Ms!", textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orangeAccent,
+                  letterSpacing: 2.0,
+
+                )
+            ),
           )
           else if (!selected) Text("Select a time!",
               style: TextStyle(
